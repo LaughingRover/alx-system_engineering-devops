@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Bash script that creates an RSA key pair.
 
 # Set the filename for the private key
 private_key="school"

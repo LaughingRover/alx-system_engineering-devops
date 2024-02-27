@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# Script: install_nginx.sh
+# Description: Configures a new Ubuntu machine to install and set up nginx with specific requirements.
+
+# Install nginx
+apt-get update
+apt-get install -y nginx
+
+# Ensure nginx is listening on port 80
+sed -i 's/.*listen 80;/listen 80;/g' /etc/nginx/sites-available/default
+
+# Check if nginx is already running
+if pgrep nginx >/dev/null; then
+    echo "Nginx is already running"
+else
+    # Start nginx
+    nginx || {
+        echo "Failed to start nginx"
+        exit 1
+    }
+fi
+
+# Create a temporary HTML file with "Hello World!"
+echo "Hello World!" > /var/www/html/index.html
+
+# Check if nginx is serving "Hello World!" on root path '/'
+if curl -s http://localhost | grep -q "Hello World!"; then
+    echo "Nginx is configured successfully to serve 'Hello World!' on root path '/'"
+else
+    echo "Failed to configure nginx to serve 'Hello World!' on root path '/'"
+    exit 1
+fi
+
